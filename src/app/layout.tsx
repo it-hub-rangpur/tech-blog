@@ -8,6 +8,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { Box } from "@mui/material";
 import "./globals.css";
+import Script from "next/script";
 
 export default function RootLayout({
   children,
@@ -32,6 +33,21 @@ export default function RootLayout({
 
   return (
     <html lang="en">
+      <Script
+        id="google-adsense"
+        dangerouslySetInnerHTML={{
+          __html: `
+              (function() {
+                var script = document.createElement('script');
+               src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7862759836671677;
+                script.async = true;
+                script.crossOrigin = 'anonymous';
+                document.head.appendChild(script);
+              })();
+            `,
+        }}
+      />
+
       <body>
         <AppRouterCacheProvider>
           <ThemeProvider theme={theme}>
