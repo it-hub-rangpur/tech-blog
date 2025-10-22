@@ -1,21 +1,31 @@
 {
-  "name": "it-hub-blog",
+  "name": "tech-blog",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
-    "start": "next start"
+    "start": "next start",
+    "mapping": "node ./src/utils/generateArticleMappingWithProgress.js",
+    "mapping:quick": "node ./src/utils/generateArticleMappingWithProgress.js --pages=2 --per-page=5",
+    "mapping:full": "node ./src/utils/generateArticleMappingWithProgress.js --pages=10 --per-page=100"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@mui/icons-material": "^7.3.4",
+    "@mui/material": "^7.3.4",
+    "@mui/material-nextjs": "^7.3.3",
+    "cli-progress": "^3.12.0",
+    "next": "15.5.6",
     "react": "19.1.0",
-    "react-dom": "19.1.0",
-    "next": "15.5.6"
+    "react-dom": "19.1.0"
   },
   "devDependencies": {
-    "typescript": "^5",
+    "@types/cli-progress": "^3.11.6",
     "@types/node": "^20",
     "@types/react": "^19",
-    "@types/react-dom": "^19"
+    "@types/react-dom": "^19",
+    "typescript": "^5"
   }
 }
