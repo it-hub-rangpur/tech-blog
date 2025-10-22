@@ -1,10 +1,5 @@
-// app/api/articles/route.ts
-import { NextRequest, NextResponse } from "next/server";
-import {
-  DevToArticle,
-  SuccessResponse,
-  ErrorResponse,
-} from "@/types/devto.types";
+// app/api/[id]/[slug]/route.ts
+import { NextRequest } from "next/server";
 
 interface RouteParams {
   params: Promise<{
@@ -17,60 +12,50 @@ export async function GET(
   request: NextRequest,
   { params }: RouteParams
 ): Promise<Response> {
-  const pathName = await params;
-  const id = pathName?.id;
-
   try {
-    // // Build the Dev.to API URL
-    let devToUrl = `https://dev.to/api/articles/${id}`;
+    const { id, slug } = await params;
 
-    const res = await fetch(devToUrl, {
+    // Use environment variable for base URL
+    const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+
+    // Fetch from DEV.to API
+    const devToResponse = await fetch(`${baseUrl}/api/articles/${id}`, {
       headers: {
-        "User-Agent": "Your News App (your-email@example.com)",
+        "User-Agent": "TechBlog App (your-email@example.com)",
+        Accept: "application/vnd.forem.api-v1+json",
       },
     });
 
-    if (!res.ok) {
-      throw new Error(`Dev.to API error: ${res.status} ${res.statusText}`);
+    if (!devToResponse.ok) {
+      return Response.json({ error: "Article not found" }, { status: 404 });
     }
 
-    const articles = await res.json();
-    const tags = articles?.tags;
+    const article = await devToResponse.json();
 
-    const relatedUrl = `https://dev.to/api/articles?page=1&per_page=3&tag=${tags?.join(
+    // Get related articles
+    const tags = article.tags || [];
+    let relatedArticles = [];
+
+    const relatedUrl = `${baseUrl}/api/articles?tag=${tags.join(
       "&tag="
-    )}`;
+    )}&page=1&per_page=3`;
 
-    const relatedResponse = await fetch(relatedUrl, {
+    const relatedArticlesResponse = await fetch(relatedUrl, {
       headers: {
-        "User-Agent": "Your News App (your-email@example.com)",
+        "User-Agent": "TechBlog App (your-email@example.com)",
+        Accept: "application/vnd.forem.api-v1+json",
       },
     });
+    if (relatedArticlesResponse.ok) {
+      relatedArticles = await relatedArticlesResponse.json();
+    }
 
-    const relatedArticles = await relatedResponse.json();
-
-    const responseData = {
-      success: true,
-      data: articles,
+    return Response.json({
+      data: article,
       relatedArticles,
-    };
-
-    return NextResponse.json(responseData, {
-      status: 200,
-      headers: {
-        "Cache-Control": "public, s-maxage=60", // Cache for 1 minute
-      },
     });
   } catch (error) {
-    console.error("Error fetching articles:", error);
-
-    const errorResponse = {
-      success: false,
-      error: error instanceof Error ? error.message : "Unknown error occurred",
-    };
-
-    return NextResponse.json(errorResponse, {
-      status: 500,
-    });
+    console.error("API Error:", error);
+    return Response.json({ error: "Internal server error" }, { status: 500 });
   }
 }

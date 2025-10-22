@@ -14,7 +14,7 @@ export async function GET(request: NextRequest): Promise<Response> {
 
   try {
     // Build the Dev.to API URL
-    let devToUrl = `https://dev.to/api/articles?page=${page}&per_page=${per_page}`;
+    let devToUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/articles?page=${page}&per_page=${per_page}`;
     if (tag) {
       devToUrl += `&tag=${encodeURIComponent(tag)}`;
     }
@@ -41,7 +41,7 @@ export async function GET(request: NextRequest): Promise<Response> {
       try {
         // Quick check if page 50 has content to estimate total pages
         const farPageCheck = await fetch(
-          `https://dev.to/api/articles?page=50&per_page=1`,
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/articles?page=50&per_page=1`,
           { signal: AbortSignal.timeout(5000) } // 5 second timeout
         );
         if (farPageCheck.ok) {

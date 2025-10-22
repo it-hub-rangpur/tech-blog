@@ -172,19 +172,16 @@ export default function HeroFeatured({ post }: HeroFeaturedProps) {
               variant="contained"
               size="medium"
               component={Link}
-              href={post.url}
-              target="_blank"
+              href={`/${post?.id}/${post?.slug}`}
               rel="noopener noreferrer"
               endIcon={<ArrowForward />}
               sx={{
+                textTransform: "none",
                 bgcolor: "white",
                 color: "primary.main",
                 fontWeight: 600,
                 minWidth: "140px",
-                "&:hover": {
-                  bgcolor: "grey.100",
-                  transform: "translateX(4px)",
-                },
+                boxShadow: "0 4px 10px rgba(0,0,0,0.2)",
                 transition: "all 0.3s ease",
               }}
             >

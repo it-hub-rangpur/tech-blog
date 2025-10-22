@@ -26,13 +26,16 @@ import PostCard from "@/components/PostCard";
 import { DevToArticle } from "@/types/devto.types";
 
 const getArticleDetails = async (id: string, slug: string) => {
-  const res = await fetch(`http://localhost:3000/api/${id}/${slug}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    cache: "no-store",
-  });
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_APP_URL}/api/${id}/${slug}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      cache: "no-store",
+    }
+  );
   const data = await res.json();
   return data;
 };

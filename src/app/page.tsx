@@ -380,11 +380,7 @@ const getArticles = async (params: {
   const { page, per_page, search, tag } = params;
 
   try {
-    const url = new URL(
-      `${
-        process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"
-      }/api/articles`
-    );
+    const url = new URL(`${process.env.NEXT_PUBLIC_APP_URL}/api/articles`);
     url.searchParams.set("page", page.toString());
     url.searchParams.set("per_page", per_page.toString());
 
