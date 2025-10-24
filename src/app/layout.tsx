@@ -63,7 +63,7 @@ export default function RootLayout({
                 minHeight: "100vh",
               }}
             >
-              <Header mode={mode} toggleTheme={toggleTheme} />
+              <Header />
               <Box component="main" sx={{ flexGrow: 1 }}>
                 {children}
               </Box>

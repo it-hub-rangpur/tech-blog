@@ -7,19 +7,23 @@ import {
   Stack,
   Alert,
   Button,
-  Chip,
   Card,
-  CardContent,
   Skeleton,
 } from "@mui/material";
+import {
+  TrendingUp,
+  Whatshot,
+  NewReleases,
+  Tag,
+  ArrowForward,
+} from "@mui/icons-material";
 import HeroFeatured from "@/components/HeroFeatured";
 import PostCard from "@/components/PostCard";
 import Pagination from "@/components/Pagination";
 import GoogleAdContainer from "@/components/GoogleAdContainer";
-import SearchBox from "@/components/SearchBox"; // New component
+import SearchBox from "@/components/SearchBox";
 import { getPosts } from "@/data/posts";
 import { ErrorResponse, SuccessResponse } from "@/types/devto.types";
-import { TrendingUp, Whatshot, NewReleases, Tag } from "@mui/icons-material";
 
 export type ISearchParams = {
   [key: string]: string | string[] | undefined;
@@ -81,21 +85,112 @@ export default async function Home({ searchParams }: HomeProps) {
   }
 
   const featuredPost = (articles as SuccessResponse)?.data[0];
-
   const showHero = page === 1 && !search && !tag;
 
   return (
     <Box sx={{ minHeight: "100vh", bgcolor: "background.default" }}>
-      <Container maxWidth="xl" sx={{ py: { xs: 2, md: 3 } }}>
-        {/* Hero Section - Only show on first page without filters */}
-        {showHero && (
-          <Box sx={{ mb: 6 }}>
-            <HeroFeatured post={featuredPost} />
-          </Box>
-        )}
+      {/* New Hero Section */}
+      {showHero && (
+        <Box
+          sx={{
+            background: "linear-gradient(135deg, #ffffff 0%, #f5f7fa 100%)",
+            borderBottom: `1px solid #e0e0e0`,
+            py: { xs: 6, md: 10 },
+          }}
+        >
+          <Container maxWidth="lg">
+            <Grid container spacing={4} alignItems="center">
+              <Grid size={{ xs: 12, md: 6 }}>
+                <Box sx={{ mb: 4 }}>
+                  <Typography
+                    variant="h1"
+                    sx={{
+                      fontWeight: 800,
+                      fontSize: { xs: "2rem", sm: "2.5rem", md: "3rem" },
+                      lineHeight: 1.2,
+                      mb: 2,
+                      background:
+                        "linear-gradient(135deg, #0066cc 0%, #00bcd4 100%)",
+                      backgroundClip: "text",
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                    }}
+                  >
+                    Welcome to TechBlog
+                  </Typography>
+                  <Typography
+                    variant="h5"
+                    sx={{
+                      color: "text.secondary",
+                      fontWeight: 400,
+                      mb: 3,
+                      lineHeight: 1.6,
+                    }}
+                  >
+                    Explore the latest trends in artificial intelligence, web
+                    development, cloud computing, and more. Stay ahead of the
+                    technology curve with in-depth articles and insights.
+                  </Typography>
+                </Box>
+              </Grid>
+              <Grid size={{ xs: 12, md: 6 }}>
+                <Box
+                  sx={{
+                    position: "relative",
+                    height: { xs: 300, md: 400 },
+                    background: `linear-gradient(135deg, #0066cc20 0%, #00bcd420 100%)`,
+                    borderRadius: 3,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    border: `2px solid #e0e0e0`,
+                    overflow: "hidden",
+                  }}
+                >
+                  <Box
+                    sx={{
+                      position: "absolute",
+                      width: "100%",
+                      height: "100%",
+                      background:
+                        "radial-gradient(circle at 20% 50%, rgba(0, 102, 204, 0.1) 0%, transparent 50%)",
+                      animation: "pulse 3s ease-in-out infinite",
+                      "@keyframes pulse": {
+                        "0%, 100%": { opacity: 0.5 },
+                        "50%": { opacity: 1 },
+                      },
+                    }}
+                  />
+                  <Typography
+                    variant="h4"
+                    sx={{
+                      color: "text.secondary",
+                      fontWeight: 700,
+                      textAlign: "center",
+                      zIndex: 1,
+                    }}
+                  >
+                    Technology Insights
+                  </Typography>
+                </Box>
+              </Grid>
+            </Grid>
+          </Container>
+        </Box>
+      )}
 
-        {/* Main Layout Grid */}
-        <Grid container spacing={3}>
+      {/* Featured Hero Section (Original) */}
+      {showHero && featuredPost && (
+        <Box sx={{ py: 4 }}>
+          <Container maxWidth="xl">
+            <HeroFeatured post={featuredPost} />
+          </Container>
+        </Box>
+      )}
+
+      {/* Main Content Area */}
+      <Container maxWidth="xl" sx={{ py: { xs: 4, md: 6 } }}>
+        <Grid container spacing={4}>
           {/* Sidebar - Left */}
           <Grid size={{ xs: 12, lg: 2.5 }}>
             <SidebarContent search={search} tag={tag} />
@@ -122,37 +217,50 @@ export default async function Home({ searchParams }: HomeProps) {
   );
 }
 
-// Sidebar Content Component - Now server component only
+// Sidebar Content Component
 function SidebarContent({ search, tag }: { search?: string; tag?: string }) {
   return (
     <Stack spacing={3} sx={{ position: "sticky", top: 100 }}>
-      {/* Search Box - Using the new component */}
+      {/* Search Box */}
       <SearchBox defaultValue={search} />
 
       {/* Trending Tags */}
-      <Card sx={{ p: 2 }}>
-        <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 2 }}>
-          <Whatshot sx={{ color: "error.main", fontSize: 20 }} />
-          <Typography variant="h6" sx={{ fontWeight: 600, fontSize: "1rem" }}>
+      <Card
+        sx={{
+          p: 3,
+          background: "linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)",
+          border: "1px solid",
+          borderColor: "divider",
+          borderRadius: 3,
+        }}
+      >
+        <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 3 }}>
+          <Whatshot sx={{ color: "error.main", fontSize: 24 }} />
+          <Typography variant="h6" sx={{ fontWeight: 700, fontSize: "1.1rem" }}>
             Trending Tags
           </Typography>
         </Stack>
-        <Stack spacing={1}>
+        <Stack spacing={1.5}>
           {TRENDING_TAGS.map((tagItem) => (
             <Button
               key={tagItem.name}
               href={`/?tag=${tagItem.name}`}
               component="a"
-              startIcon={<TrendingUp sx={{ fontSize: 16 }} />}
+              startIcon={<TrendingUp sx={{ fontSize: 18 }} />}
               sx={{
                 justifyContent: "flex-start",
                 textTransform: "none",
-                fontSize: "0.875rem",
-                color: "text.primary",
-                bgcolor:
-                  tag === tagItem.name ? "action.selected" : "transparent",
+                fontSize: "0.9rem",
+                fontWeight: 600,
+                color: tag === tagItem.name ? "primary.main" : "text.primary",
+                bgcolor: tag === tagItem.name ? "primary.50" : "transparent",
+                borderRadius: 2,
+                px: 2,
+                py: 1,
+                transition: "all 0.2s ease",
                 "&:hover": {
                   bgcolor: "action.hover",
+                  transform: "translateX(4px)",
                 },
               }}
             >
@@ -162,11 +270,11 @@ function SidebarContent({ search, tag }: { search?: string; tag?: string }) {
         </Stack>
       </Card>
 
-      {/* Google Ad - Square */}
+      {/* Google Ad */}
       <GoogleAdContainer
         adSlot="your-ad-slot-sidebar-1"
         format="rectangle"
-        style={{ width: "100%", height: "250px" }}
+        style={{ width: "100%", height: "250px", borderRadius: 12 }}
       />
     </Stack>
   );
@@ -187,13 +295,44 @@ function MainContent({
   isLoading: boolean;
 }) {
   return (
-    <Stack spacing={3}>
-      {/* Page Header */}
+    <Stack spacing={4}>
+      {/* Section Header */}
+      <Box>
+        <Typography
+          variant="h4"
+          sx={{
+            fontWeight: 800,
+            mb: 1,
+            background: "linear-gradient(135deg, #0066cc 0%, #00bcd4 100%)",
+            backgroundClip: "text",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+          }}
+        >
+          {search
+            ? `Search: "${search}"`
+            : tag
+            ? `Tag: #${tag}`
+            : "Latest Articles"}
+        </Typography>
+        <Typography variant="body1" color="text.secondary">
+          {search
+            ? "Search results for your query"
+            : tag
+            ? `Articles tagged with #${tag}`
+            : "Discover the newest content from our tech experts"}
+        </Typography>
+      </Box>
 
       {/* Error Alert */}
       {!articles.success && !isLoading && (
         <Alert
           severity="error"
+          sx={{
+            borderRadius: 3,
+            border: "1px solid",
+            borderColor: "error.light",
+          }}
           action={
             <Button color="inherit" size="small" href="/">
               Retry
@@ -209,64 +348,108 @@ function MainContent({
         <LoadingSkeleton />
       ) : articles.success ? (
         <>
-          {/* Articles List */}
           {articles.data.length > 0 ? (
-            <Grid container spacing={2}>
-              {articles.data.map((post, index) => (
-                <Grid key={post.id} size={{ xs: 12, sm: 6 }}>
-                  <PostCard post={post} />
+            <>
+              <Grid container spacing={3}>
+                {articles.data.map((post, index) => (
+                  <Grid key={post.id} size={{ xs: 12, sm: 6, lg: 6 }}>
+                    <PostCard post={post} />
 
-                  {/* Google Ad after every 4th article */}
-                  {(index + 1) % 4 === 0 && (
-                    <Box sx={{ mt: 2, mb: 2 }}>
-                      <GoogleAdContainer
-                        adSlot="your-ad-slot-infeed-1"
-                        format="auto"
-                        responsive={true}
-                      />
-                    </Box>
-                  )}
-                </Grid>
-              ))}
-            </Grid>
+                    {/* Google Ad after every 4th article */}
+                    {(index + 1) % 4 === 0 && (
+                      <Box sx={{ mt: 3, mb: 2 }}>
+                        <GoogleAdContainer
+                          adSlot="your-ad-slot-infeed-1"
+                          format="auto"
+                          responsive={true}
+                          style={{ borderRadius: 12 }}
+                        />
+                      </Box>
+                    )}
+                  </Grid>
+                ))}
+              </Grid>
+
+              {/* Pagination */}
+              {articles.data.length > 0 && articles.pagination && (
+                <Card
+                  sx={{
+                    p: 4,
+                    borderRadius: 3,
+                    background:
+                      "linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)",
+                    border: "1px solid",
+                    borderColor: "divider",
+                  }}
+                >
+                  <Box sx={{ display: "flex", justifyContent: "center" }}>
+                    <Pagination
+                      currentPage={articles.pagination.current_page}
+                      hasNextPage={articles.pagination.has_next_page}
+                      hasPreviousPage={articles.pagination.has_previous_page}
+                      totalPages={
+                        articles.pagination.estimated_remaining_pages
+                          ? articles.pagination.current_page + 10
+                          : undefined
+                      }
+                      searchParams={params}
+                    />
+                  </Box>
+                </Card>
+              )}
+            </>
           ) : (
             // Empty State
-            <Card sx={{ p: 6, textAlign: "center" }}>
+            <Card
+              sx={{
+                p: 8,
+                textAlign: "center",
+                borderRadius: 3,
+                background: "linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)",
+              }}
+            >
               <NewReleases
-                sx={{ fontSize: 64, color: "text.secondary", mb: 2 }}
+                sx={{
+                  fontSize: 64,
+                  color: "text.secondary",
+                  mb: 3,
+                  opacity: 0.7,
+                }}
               />
-              <Typography variant="h6" color="text.secondary" gutterBottom>
+              <Typography
+                variant="h5"
+                color="text.secondary"
+                gutterBottom
+                sx={{ fontWeight: 600 }}
+              >
                 No articles found
               </Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+              <Typography
+                variant="body1"
+                color="text.secondary"
+                sx={{ mb: 4, maxWidth: 400, mx: "auto" }}
+              >
                 {search
-                  ? `No results found for "${search}". Try different keywords.`
+                  ? `No results found for "${search}". Try different keywords or browse all articles.`
                   : tag
-                  ? `No articles found for tag "${tag}".`
-                  : "No articles available at the moment."}
+                  ? `No articles found for tag "${tag}". Explore other popular tags.`
+                  : "No articles available at the moment. Please check back later."}
               </Typography>
-              <Button variant="contained" href="/" component="a">
+              <Button
+                variant="contained"
+                href="/"
+                component="a"
+                sx={{
+                  background:
+                    "linear-gradient(135deg, #0066cc 0%, #00bcd4 100%)",
+                  px: 4,
+                  py: 1.5,
+                  borderRadius: 2,
+                  fontWeight: 600,
+                }}
+              >
                 Browse All Articles
               </Button>
-            </Card>
-          )}
-
-          {/* Pagination */}
-          {articles.data.length > 0 && articles.pagination && (
-            <Card sx={{ p: 3 }}>
-              <Box sx={{ display: "flex", justifyContent: "center" }}>
-                <Pagination
-                  currentPage={articles.pagination.current_page}
-                  hasNextPage={articles.pagination.has_next_page}
-                  hasPreviousPage={articles.pagination.has_previous_page}
-                  totalPages={
-                    articles.pagination.estimated_remaining_pages
-                      ? articles.pagination.current_page + 10
-                      : undefined
-                  }
-                  searchParams={params}
-                />
-              </Box>
             </Card>
           )}
         </>
@@ -280,14 +463,22 @@ function RightSidebar() {
   return (
     <Stack spacing={3} sx={{ position: "sticky", top: 100 }}>
       {/* Popular Tags */}
-      <Card sx={{ p: 2 }}>
-        <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 2 }}>
-          <Tag sx={{ color: "primary.main", fontSize: 20 }} />
-          <Typography variant="h6" sx={{ fontWeight: 600, fontSize: "1rem" }}>
+      <Card
+        sx={{
+          p: 3,
+          background: "linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)",
+          border: "1px solid",
+          borderColor: "divider",
+          borderRadius: 3,
+        }}
+      >
+        <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 3 }}>
+          <Tag sx={{ color: "primary.main", fontSize: 24 }} />
+          <Typography variant="h6" sx={{ fontWeight: 700, fontSize: "1.1rem" }}>
             Popular Tags
           </Typography>
         </Stack>
-        <Stack spacing={1}>
+        <Stack spacing={1.5}>
           {POPULAR_TAGS.slice(0, 8).map((tagItem) => (
             <Button
               key={tagItem.name}
@@ -297,16 +488,32 @@ function RightSidebar() {
               sx={{
                 justifyContent: "space-between",
                 textTransform: "none",
-                fontSize: "0.875rem",
+                fontSize: "0.9rem",
+                fontWeight: 600,
                 color: "text.primary",
+                borderRadius: 2,
+                px: 2,
+                py: 1.5,
+                transition: "all 0.2s ease",
                 "&:hover": {
                   bgcolor: "action.hover",
+                  transform: "translateX(4px)",
                 },
               }}
             >
               <span>#{tagItem.name}</span>
-              <Typography variant="caption" color="text.secondary">
-                {tagItem.count}
+              <Typography
+                variant="caption"
+                sx={{
+                  color: "text.secondary",
+                  fontWeight: 600,
+                  bgcolor: "action.selected",
+                  px: 1,
+                  py: 0.5,
+                  borderRadius: 1,
+                }}
+              >
+                {tagItem.count.toLocaleString()}
               </Typography>
             </Button>
           ))}
@@ -317,16 +524,32 @@ function RightSidebar() {
       <GoogleAdContainer
         adSlot="your-ad-slot-sidebar-2"
         format="vertical"
-        style={{ width: "100%", height: "600px" }}
+        style={{
+          width: "100%",
+          height: "600px",
+          borderRadius: 12,
+        }}
       />
 
       {/* Newsletter Signup */}
-      <Card sx={{ p: 2, bgcolor: "primary.main", color: "white" }}>
-        <Typography variant="h6" gutterBottom sx={{ fontWeight: 600 }}>
+      <Card
+        sx={{
+          p: 3,
+          background: "linear-gradient(135deg, #0066cc 0%, #00bcd4 100%)",
+          color: "white",
+          borderRadius: 3,
+          border: "none",
+        }}
+      >
+        <Typography variant="h6" gutterBottom sx={{ fontWeight: 700 }}>
           Stay Updated
         </Typography>
-        <Typography variant="body2" sx={{ mb: 2, opacity: 0.9 }}>
-          Get the latest articles delivered to your inbox.
+        <Typography
+          variant="body2"
+          sx={{ mb: 3, opacity: 0.9, lineHeight: 1.6 }}
+        >
+          Get the latest tech articles, tutorials, and industry insights
+          delivered directly to your inbox.
         </Typography>
         <Button
           variant="contained"
@@ -334,12 +557,17 @@ function RightSidebar() {
           sx={{
             bgcolor: "white",
             color: "primary.main",
+            fontWeight: 700,
+            py: 1.5,
+            borderRadius: 2,
+            transition: "all 0.3s ease",
             "&:hover": {
               bgcolor: "grey.100",
+              transform: "translateY(-2px)",
             },
           }}
         >
-          Subscribe
+          Subscribe Now
         </Button>
       </Card>
     </Stack>
@@ -349,18 +577,27 @@ function RightSidebar() {
 // Loading Skeleton Component
 function LoadingSkeleton() {
   return (
-    <Grid container spacing={2}>
+    <Grid container spacing={3}>
       {Array.from({ length: 6 }).map((_, index) => (
-        <Grid key={index} size={{ xs: 12, sm: 6 }}>
-          <Card sx={{ p: 2 }}>
+        <Grid key={index} size={{ xs: 12, sm: 6, lg: 6 }}>
+          <Card
+            sx={{
+              p: 3,
+              borderRadius: 3,
+              background: "linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)",
+            }}
+          >
             <Stack spacing={2}>
-              <Skeleton variant="rectangular" height={140} />
+              <Skeleton
+                variant="rectangular"
+                height={160}
+                sx={{ borderRadius: 2 }}
+              />
               <Skeleton variant="text" height={32} />
-              <Skeleton variant="text" height={20} />
-              <Skeleton variant="text" height={20} width="80%" />
-              <Stack direction="row" spacing={1}>
-                <Skeleton variant="circular" width={24} height={24} />
-                <Skeleton variant="text" width={100} height={24} />
+              <Skeleton variant="text" height={24} width="80%" />
+              <Stack direction="row" spacing={1} alignItems="center">
+                <Skeleton variant="circular" width={32} height={32} />
+                <Skeleton variant="text" width={120} height={24} />
               </Stack>
             </Stack>
           </Card>
